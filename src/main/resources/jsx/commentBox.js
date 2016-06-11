@@ -8,8 +8,11 @@ var CommentBox = React.createClass({
     }
 });
 
-var renderServer = function (comments) {
-    return React.renderToString(
+var renderServer = function () {
+    print("ITS A HIT!");
+    print(React.toString());
+
+    return ReactDOMServer.renderToString(
         <CommentBox />
     );
 };

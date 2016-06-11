@@ -21,7 +21,7 @@ public class Main {
     public String getName(){
         return "hevi.info";
     }
-
+//https://facebook.github.io/react/docs/environments.html
     public static void main(String[] args) throws FileNotFoundException, IOException{
         try {
             List<Comment> comments = new ArrayList<>();
@@ -44,10 +44,12 @@ public class Main {
 
             final CachedJsxTransformer.AssetEntry assetEntry = assetCache.get("commentBox.js", (key) -> IOUtils
                     .toString(new FileInputStream("src/main/resources/jsx/commentBox.js"), StandardCharsets.UTF_8));
-            System.out.println(assetEntry.content);
+//            System.out.println(assetEntry.content);
+
             scriptEngine.eval(assetEntry.content);
             PrintWriter writer = new PrintWriter("src/main/resources/jsx/commentBoxNonJSX.js", "UTF-8");
             writer.println(assetEntry.content);
+
             writer.close();
             scriptEngine.eval(new FileReader("src/main/resources/jsx/commentBoxNonJSX.js"));
 
