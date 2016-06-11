@@ -8,6 +8,27 @@
     <artifactId>NashornTest1</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.cronn.jsxtransformer</groupId>
+            <artifactId>jsxtransformer</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>http://jcenter.bintray.com</url>
+
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
     <build>
         <plugins>
             <plugin>

@@ -1,8 +1,12 @@
+import de.cronn.jsxtransformer.CachedJsxTransformer;
+import org.apache.commons.io.IOUtils;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,38 +15,41 @@ import java.util.List;
  */
 public class Main {
 
-    static List<Comment> comments = new ArrayList<>();
     public Main(){
-        comments.add(new Comment("Peter Parker", "This is a comment."));
-        comments.add(new Comment("John Doe", "This is *another* comment."));
+
     }
     public String getName(){
         return "hevi.info";
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException{
         try {
+            List<Comment> comments = new ArrayList<>();
+            comments.add(new Comment("Peter Parker", "This is a comment."));
+            comments.add(new Comment("John Doe", "This is *another* comment."));
+
             ScriptEngineManager engineManager = new ScriptEngineManager();
             ScriptEngine scriptEngine = engineManager.getEngineByName("nashorn");
-            ScriptEngine scriptEngine2 = engineManager.getEngineByName("nashorn");
 
-//            String fileName = "src/main/resources/jsfile.js";
-//            String functionName = "doIt";
-//            scriptEngine.eval("load('" + fileName + "');");
-
-            try {
-                scriptEngine.eval(new FileReader("src/main/resources/libs/nashorn-polyfill.js"));
-                scriptEngine.eval(new FileReader("src/main/resources/libs/react.js"));
-                scriptEngine.eval(new FileReader("src/main/resources/libs/react-dom-server.js"));
-
-                scriptEngine2.eval(new FileReader("src/main/resources/libs/babel.js"));
-                Object output = scriptEngine2.eval("Babel.transformFile('src/main/resources/jsx/commentBox.js', { presets: ['react'] }).code");
-                System.out.println(output);
+            //JSX Transformations
+            CachedJsxTransformer assetCache   = new CachedJsxTransformer(false, false);
 
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+
+            scriptEngine.eval(new FileReader("src/main/resources/libs/nashorn-polyfill.js"));
+            scriptEngine.eval(new FileReader("src/main/resources/libs/react.js"));
+            scriptEngine.eval(new FileReader("src/main/resources/libs/react-dom-server.js"));
+            scriptEngine.eval(new FileReader("src/main/resources/libs/showdown.js"));
+
+
+            final CachedJsxTransformer.AssetEntry assetEntry = assetCache.get("commentBox.js", (key) -> IOUtils
+                    .toString(new FileInputStream("src/main/resources/jsx/commentBox.js"), StandardCharsets.UTF_8));
+            System.out.println(assetEntry.content);
+            scriptEngine.eval(assetEntry.content);
+            PrintWriter writer = new PrintWriter("src/main/resources/jsx/commentBoxNonJSX.js", "UTF-8");
+            writer.println(assetEntry.content);
+            writer.close();
+            scriptEngine.eval(new FileReader("src/main/resources/jsx/commentBoxNonJSX.js"));
 
             Invocable inv = (Invocable) scriptEngine;
             String retValue = (String) inv.invokeFunction("renderServer",comments);
@@ -56,7 +63,7 @@ public class Main {
     }
 
 
-    public class Comment {
+    public static class Comment {
         private String author;
         private String text;
 

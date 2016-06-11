@@ -11,5 +11,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: de.cronn.jsxtransformer:jsxtransformer:0.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.mozilla:rhino:1.7.7.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
   </component>
 </module>
